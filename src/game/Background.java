@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 /*
  * 背景类
  * */
-public class Background {
+public class Background implements Runnable,IDraw{
 	public int bx;
 	public int by;
 	public Image imbk;
@@ -16,13 +16,32 @@ public class Background {
 	public Background(Panel p) {
 		this.bx = 0;
 		this.by = 0;
-		this.imbk = new ImageIcon("sourcefiles/backGround.gif").getImage();
+		this.imbk = new ImageIcon("sourcefiles/backGround.png").getImage();
 		this.nowp = p;
+		Thread t = new Thread(this);
+		t.start();
 	}
 	
-	public void drawBackground(Graphics g) {
+	//IDraw
+	public void draw(Graphics g) {
+		g.drawImage(imbk, bx, by-660, nowp);
 		g.drawImage(imbk, bx, by, nowp);
-		System.out.println("画背景"+bx);
 	}
 
+	//Runnable
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true) {
+			this.by += 2;
+			if(this.by >= 660) {
+				this.by = 0;
+			}
+			try {
+				Thread.sleep(100);
+			}catch(InterruptedException e){
+				
+			}
+		}
+	}
 }

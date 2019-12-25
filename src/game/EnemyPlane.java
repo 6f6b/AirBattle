@@ -6,10 +6,21 @@ import java.awt.Panel;
 
 public class EnemyPlane extends Plane {
 
-	public EnemyPlane(Image img, Panel p) {
-		super(img, p);
+	public EnemyPlane(String imgName, Panel panel, int rate, int x, int y) {
+		super(imgName, panel, rate, x, y);
 		// TODO Auto-generated constructor stub
 	}
+
+	public EnemyPlane(String imgName, Panel panel, int x, int y) {
+		super(imgName, panel, x, y);
+		// TODO Auto-generated constructor stub
+	}
+
+	public EnemyPlane(String imgName, Panel panel) {
+		super(imgName, panel);
+		// TODO Auto-generated constructor stub
+	}
+
 
 
 }
