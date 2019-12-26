@@ -3,77 +3,71 @@ package game;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
+import java.awt.Point;
+
+import javax.management.Notification;
 import javax.swing.ImageIcon;
+
+import UIKit.Rect;
 
 /*
  * 飞机
  * */
-public class Plane implements Runnable,IDraw{
-	/*
-	 * 飞机图片、位置
-	 * */
-	//图片名
-	private String imgName;
-	//图片
-	private Image  img;
-	//x坐标
-	private int x;
-	//y坐标
-	private int y;
-	//所处的平面
-	private	Panel panel;
-	//速度
-	private  int rate;
-	//飞行方向
-	public FlyDirection direction;
-	
-	public Plane(String imgName,Panel panel) {
-		this(imgName,panel,0,0);
-	}
-	public Plane(String imgName, Panel panel, int x, int y) {
-		this(imgName,panel,0,x,y);
-	}	
-	public Plane(String imgName, Panel panel, int rate,int x, int y) {
-		super();
-		this.imgName = imgName;
-		Image img = new ImageIcon("sourcefiles/"+this.imgName).getImage();
-		this.img = img;
-		this.x = x;
-		this.y = y;
-		this.panel = panel;
+abstract public class Plane extends Equipment implements IFighterPlane{
+	//弹仓
+	protected Magazine magazine;
+
+	public Plane(GamePanel panel, int rate, String imgName) {
+		super(panel, null, imgName);
 		this.rate = rate;
-		this.direction = FlyDirection.VerticalDown;
+		this.loadWeapons();
+	}
+
+	public void moveTo(Point location) {
+		this.location = location;
+	}
+	
+	//起飞
+	public void takeOff(Point initialLocation,FlyDirection direction) {
+		this.location = initialLocation;
+		this.direction = direction;
 		
 		Thread t = new Thread(this);
 		t.start();
 	}
-
-	public void moveTo(int x,int y) {
-		this.x = x;
-		this.y = y;
-	}
 	
-	//IDraw
-	public void draw(Graphics g) {
-		g.drawImage(img, this.x-img.getWidth(panel)/2, this.y-img.getHeight(panel)/2, this.panel);
-	}
-	
-	//Runnable
-	public void run() {
-		while(true) {
-			if(this.direction == FlyDirection.VerticalDown) {
-				y += this.rate;
-			}	
-			if(this.direction == FlyDirection.VerticalUp) {
-				y -= this.rate;
-			}
-			if(y < 0) {
-			}
-			try {
-				Thread.sleep(100);
-			}catch(InterruptedException e){
-				
-			}
+	public void fireBullet() {
+		Weapon bullet = this.magazine.takeBullet();
+		if(bullet == null) {
+			System.out.println(this.getClass().toString()+"子弹告罄");
+			return;
 		}
+		FlyDirection direction = this.direction == FlyDirection.VerticalDown ? FlyDirection.VerticalDown : FlyDirection.VerticalUp;
+		bullet.launch(new Point(location.x, location.y), direction);
 	}
+	
+	public void fireMissile() {
+		Weapon missile = this.magazine.takeMissile();
+		if(missile == null) {
+			System.out.println(this.getClass().toString()+"导弹弹告罄");
+			return;
+		}
+		FlyDirection direction = this.direction == FlyDirection.VerticalDown ? FlyDirection.VerticalDown : FlyDirection.VerticalUp;
+		missile.launch(new Point(location.x, location.y), direction);
+	}
+	
+    public void handleNotification(Notification notification, Object handback) {
+    	Equipment e = (Equipment) notification.getSource();
+    	if(e != this) {
+        	Rect rect = e.getRect();
+    		//被武器攻击
+        	if(e instanceof Weapon) {
+        		if(rect.inRect(this.getRect())) {
+        			Weapon weapon = (Weapon) e;        			
+        			System.out.println(this.getClass().toString()+"原始生命值:"+this.hp+"生命值减少:"+weapon.damage+"还剩:"+(this.hp-weapon.damage));
+        			this.hp -= weapon.damage;
+        		}
+        	}
+    	}
+    }
 }

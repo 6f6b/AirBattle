@@ -1,4 +1,4 @@
-package game;
+package UIKit;
 
 public class Size {
 	public int width;
