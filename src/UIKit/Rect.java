@@ -19,8 +19,13 @@ public class Rect {
 	}
 	
 	public boolean inRect(Rect rect) {
-		boolean horizontalIn = (this.origin.x+this.size.width > rect.origin.x) || (this.origin.x < rect.origin.x+rect.size.width);
-		boolean verticalIn = (this.origin.y+this.size.height > rect.origin.y) || (this.origin.y < rect.origin.y+rect.size.height);
+		boolean horizontalLeftIn = this.origin.x >= rect.origin.x && this.origin.x<=rect.origin.x+rect.size.width;
+		boolean horizontalRightIn = this.origin.x+this.size.width >= rect.origin.x && this.origin.x+this.size.width<=rect.origin.x+rect.size.width;
+		boolean verticalTopIn = this.origin.y >= rect.origin.y && this.origin.y<=rect.origin.y+rect.size.height;
+		boolean verticalBottomIn = this.origin.y+this.size.height >= rect.origin.y && this.origin.y+this.size.height<=rect.origin.y+rect.size.height;
+
+		boolean horizontalIn = horizontalLeftIn || horizontalRightIn;
+		boolean verticalIn = verticalTopIn || verticalBottomIn;
 		return horizontalIn && verticalIn;
 	}
 	

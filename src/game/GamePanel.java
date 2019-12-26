@@ -63,7 +63,7 @@ public class GamePanel extends Panel implements Runnable,MouseMotionListener{
 			//投放敌机
 			Random r = new Random();
 			int num = r.nextInt();
-			if(num%10 == 0) {
+			if(num%20 == 0) {
 				this.putEnemyPlane();
 			}
 			
@@ -78,7 +78,7 @@ public class GamePanel extends Panel implements Runnable,MouseMotionListener{
 	
 	//MouseMotionListener
     public void mouseDragged(MouseEvent e) {
-    	this.heroPlane.moveTo(new Point(e.getX(), e.getY()));
+		this.heroPlane.moveTo(new Point(e.getX(), e.getY()));
     }
 
     public void mouseMoved(MouseEvent e) {

@@ -39,7 +39,7 @@ public class HeroPlane extends Plane {
 		if(num%5 == 0) {
 			this.fireBullet();
 		}
-		if(num%100 == 0) {
+		if(num%10 == 0) {
 			this.fireMissile();
 		}
 	}

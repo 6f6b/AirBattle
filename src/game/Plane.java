@@ -25,6 +25,7 @@ abstract public class Plane extends Equipment implements IFighterPlane{
 
 	public void moveTo(Point location) {
 		this.location = location;
+		System.out.println("拖动放飞机");
 	}
 	
 	//起飞
@@ -49,7 +50,7 @@ abstract public class Plane extends Equipment implements IFighterPlane{
 	public void fireMissile() {
 		Weapon missile = this.magazine.takeMissile();
 		if(missile == null) {
-			System.out.println(this.getClass().toString()+"导弹弹告罄");
+			System.out.println(this.getClass().toString()+"导弹告罄");
 			return;
 		}
 		FlyDirection direction = this.direction == FlyDirection.VerticalDown ? FlyDirection.VerticalDown : FlyDirection.VerticalUp;
@@ -62,10 +63,18 @@ abstract public class Plane extends Equipment implements IFighterPlane{
         	Rect rect = e.getRect();
     		//被武器攻击
         	if(e instanceof Weapon) {
-        		if(rect.inRect(this.getRect())) {
-        			Weapon weapon = (Weapon) e;        			
-        			System.out.println(this.getClass().toString()+"原始生命值:"+this.hp+"生命值减少:"+weapon.damage+"还剩:"+(this.hp-weapon.damage));
-        			this.hp -= weapon.damage;
+				Weapon weapon = (Weapon) e;
+				boolean standStill2verticalDown = this.direction == FlyDirection.StandsStill && weapon.direction == FlyDirection.VerticalDown;
+				boolean verticalDown2VerticalUp = this.direction == FlyDirection.VerticalDown && weapon.direction == FlyDirection.VerticalUp;
+
+				if(standStill2verticalDown || verticalDown2VerticalUp) {
+					Rect thisRect = this.getRect();
+					boolean in = rect.inRect(thisRect);
+					if(in){
+						System.out.println(this.getClass().toString()+"被武器撞上");
+						System.out.println(this.getClass().toString()+"原始生命值:"+this.hp+"生命值减少:"+weapon.damage+"还剩:"+(this.hp-weapon.damage));
+						this.hp -= weapon.damage;
+					}
         		}
         	}
     	}

@@ -34,7 +34,7 @@ public class EnemyPlane extends Plane {
 		super.heartBeat();
 		Random r = new Random();
 		int num = r.nextInt();
-		if(num%5 == 0) {
+		if(num%50 == 0) {
 			this.fireBullet();
 		}
 		if(num%100 == 0) {

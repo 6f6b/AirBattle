@@ -30,7 +30,7 @@ public abstract class Equipment implements IDraw,Runnable,NotificationListener,I
 	protected int hp;
 	//伤害值
 	protected int damage; 
-	
+
 	public Equipment(GamePanel panel, Point location,String imgName) {
 		super();
 		this.panel = panel;
@@ -47,15 +47,16 @@ public abstract class Equipment implements IDraw,Runnable,NotificationListener,I
 	protected void finalize() {
 		System.out.println(this+"销毁");
 	}
-	
+
+
 	public void draw(Graphics g) {
 		if(img == null || location == null || panel == null) {return;}
 		g.drawImage(img, this.location.x-img.getWidth(panel)/2, this.location.y-img.getHeight(panel)/2, this.panel);
 	}
 	
 	public Rect getRect() {
-		Point origin = new Point(location.x, location.y);
 		Size size = new Size(img.getWidth(panel), img.getHeight(panel));
+		Point origin = new Point(location.x-size.width/2, location.y-size.height/2);
 		return new Rect(origin, size);
 	}
 	
@@ -71,11 +72,11 @@ public abstract class Equipment implements IDraw,Runnable,NotificationListener,I
 			if(this.direction == FlyDirection.VerticalUp) {
 				this.location.y -= this.rate;
 			}
-			Rectangle r = this.panel.getBounds();
-			Rect panelBounds = new Rect(r.x, r.y, r.width, r.height);
-			
-			if(!this.getRect().inRect(panelBounds)) {
-				System.out.println("销毁操作");
+			Rect panelBounds = new Rect(0, 0, 400, 660);
+			Rect rect = this.getRect();
+			boolean thisInPanel = rect.inRect(panelBounds);
+			if(!thisInPanel) {
+				System.out.println(this+"飞出区域销毁操作");
 				this.panel.removeEquipment(this);
 			}
 			this.heartCount += 1;
