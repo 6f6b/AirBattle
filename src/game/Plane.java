@@ -74,6 +74,9 @@ abstract public class Plane extends Equipment implements IFighterPlane{
 						System.out.println(this.getClass().toString()+"被武器撞上");
 						System.out.println(this.getClass().toString()+"原始生命值:"+this.hp+"生命值减少:"+weapon.damage+"还剩:"+(this.hp-weapon.damage));
 						this.hp -= weapon.damage;
+						if(this.hp <= 0) {
+							this.panel.removeEquipment(this);
+						}
 					}
         		}
         	}

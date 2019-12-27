@@ -11,7 +11,7 @@ public class EnemyPlane extends Plane {
 	
 	public EnemyPlane(GamePanel panel) {
 		super(panel, 3, "midPlane1.png");
-		this.hp = 10;
+		this.hp = 4;
 	}
 	
 	public void loadWeapons() {
